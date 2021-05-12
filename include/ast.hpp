@@ -1,0 +1,73 @@
+// MIT License
+//
+// Copyright (c) 2021 Ferhat Geçdoğan All Rights Reserved.
+// Distributed under the terms of the MIT License.
+//
+//
+
+#ifndef ELITE_CPP_AST_HPP
+#define ELITE_CPP_AST_HPP
+
+#include <unordered_map>
+
+#include "elite.hpp"
+
+enum class EliteKeywords {
+    Set,
+    As,
+    For,
+    Print,
+
+    LeftParenthese,
+    RightParenthese,
+
+    LeftSqBracket,
+    RightSqBracket,
+
+    Undefined
+};
+
+class EliteAST {
+public:
+    std::string ast_set  ;
+    std::string ast_as   ;
+    std::string ast_for  ;
+    std::string ast_print;
+
+    std::string ast_left_parenthese;
+    std::string ast_right_parenthese;
+
+    std::string ast_square_left_bracket ;
+    std::string ast_square_right_bracket;
+
+    std::vector<std::string> ast_for_functions          ;
+    std::vector<std::string> ast_for_functions_arguments;
+
+    std::unordered_map<std::string, EliteKeywords> syntax_list;
+public:
+    EliteAST() = default;
+    ~EliteAST()= default;
+
+    void          init_keywords()                         noexcept;
+    void          add_token    (std::string token,
+                                EliteKeywords token_type) noexcept;
+
+    EliteKeywords match_types  (std::string& token)       noexcept;
+
+    std::string   extract_arg  (std::string argument)     noexcept;
+};
+
+class EliteDataInfos {
+public:
+    EliteKeywords __type;
+
+    std::string   __name;
+    std::string   __data;
+};
+
+class EliteDataTree {
+public:
+    std::vector<EliteDataInfos> variable_list;
+};
+
+#endif // ELITE_CPP_AST_HPP
