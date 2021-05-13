@@ -13,6 +13,14 @@ for signal "start" [
     println "Hello,
     Elitebuild!"
 
+    for argument "hi" [
+        println "Hi!"
+    ]
+
+    for argument "all" [
+        println "There's nothing to do."
+    ]
+
     // Platform-specific functions.
     for specific "linux"   [
         println "Linux-based"

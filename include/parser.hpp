@@ -15,8 +15,11 @@ class EliteParser {
 public:
     EliteAST      init_ast ;
     EliteDataTree data_tree;
+
+    char**        __argv   ;
+    u32           __argc   ;
 public:
-    EliteParser() {
+    EliteParser(char** __argv__, u32 __argc__) : __argv(__argv__), __argc(__argc__) {
         this->init_ast.init_keywords();
     }
 
@@ -35,6 +38,7 @@ public:
     void ast_parse_use           (std::string argument                  ) noexcept;
     void token_set               (std::string variable, std::string data) noexcept;
 
+    bool is_same_arg             (std::string& argument                 ) noexcept;
     bool is_same                 (std::string& target                   ) noexcept;
     std::string to_os_keyword    (                                      ) noexcept;
 };

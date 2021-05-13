@@ -32,6 +32,8 @@ enum class EliteKeywords {
 enum class EliteASTForFunctions {
     Signal,
     Specific,
+    Argument,
+
     Undefined
 };
 
@@ -45,17 +47,20 @@ enum class EliteASTForSpecificTargets {
     DragonFly,
     OpenBSD,
     NetBSD,
+
     Undefined
 };
 
 enum class EliteASTUseFunctions {
     Signal,
     Exec,
+
     Undefined
 };
 
 enum class EliteASTUseArguments {
     Exit,
+
     Undefined
 };
 

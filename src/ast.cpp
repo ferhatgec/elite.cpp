@@ -50,6 +50,7 @@ void EliteAST::init_keywords() noexcept  {
 
     this->add_for_function("signal"  , EliteASTForFunctions::Signal  );
     this->add_for_function("specific", EliteASTForFunctions::Specific);
+    this->add_for_function("argument", EliteASTForFunctions::Argument);
 
     this->add_for_specific_target("windows"  , EliteASTForSpecificTargets::Windows  );
     this->add_for_specific_target("macos"    , EliteASTForSpecificTargets::macOS    );

@@ -14,10 +14,9 @@
 #include "tokenizer.hpp"
 
 namespace lexer {
-    static inline void init_lexer(EliteRead& init) noexcept {
+    static inline void init_lexer(EliteRead& init, char** __argv, u32 __argc) noexcept {
         auto        tokens      = tokenizer::tokenize_first(init);
-        EliteParser init_parser;
-
+        EliteParser init_parser (__argv, __argc);
 
         init_parser.parse_tokens(tokens);
     }

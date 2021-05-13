@@ -20,5 +20,5 @@ int main(int argc, char** argv) noexcept {
 
     init_reader.read_raw_file(std::string(argv[1]));
 
-    lexer::init_lexer(init_reader);
+    lexer::init_lexer(init_reader, argv, argc);
 }

@@ -164,12 +164,17 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                     if(is_for_argument) {
                         auto __token__ = ast_helpers::extract_arg(__token);
 
-                        if(__last_matched_function == EliteASTForFunctions::Specific) {
-                            is_main_os = this->ast_parse_for_functions(variable_name,
-                                                                       __token__);
-                        } else {
-                            this->ast_parse_for_functions(variable_name,
-                                                          __token__);
+                        switch(__last_matched_function) {
+                            case EliteASTForFunctions::Specific:
+                            case EliteASTForFunctions::Argument: {
+                                is_main_os = this->ast_parse_for_functions(variable_name,
+                                                                           __token__);
+                            }
+
+                            default: {
+                                this->ast_parse_for_functions(variable_name,
+                                                              __token__);
+                            }
                         }
 
 
@@ -221,6 +226,10 @@ bool EliteParser::ast_parse_for_functions(std::string function, std::string argu
 
         case EliteASTForFunctions::Specific: {
             return this->ast_parse_for_specific_target(argument);
+        }
+
+        case EliteASTForFunctions::Argument: {
+            return this->is_same_arg(argument);
         }
 
         default: {
@@ -318,6 +327,10 @@ void EliteParser::token_set(std::string variable, std::string data) noexcept {
                 variable,
                 data
             });
+}
+
+bool EliteParser::is_same_arg(std::string& argument) noexcept {
+    return (this->__argv[this->__argc - 1] == argument) ? true : false;
 }
 
 bool EliteParser::is_same(std::string& target) noexcept {
