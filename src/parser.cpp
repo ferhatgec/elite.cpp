@@ -132,7 +132,7 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                         if(__token__.empty()) { continue; }
 
                         this->ast_parse_use_function(variable_data,
-                                                     ast_helpers::extract_arg(__token));
+                                                     __token__);
 
                         is_use = is_use_argument = false;
 
@@ -288,7 +288,7 @@ void EliteParser::ast_parse_use_function(std::string function, std::string argum
         }
 
         case EliteASTUseFunctions::Exec  : {
-            if(std::system(ast_helpers::extract_arg(argument).c_str())) {
+            if(std::system(argument.c_str())) {
                 // Execution error
             }
         }

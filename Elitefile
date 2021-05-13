@@ -39,7 +39,7 @@ for signal "start" [
     \\]
 
     for specific "linux" [
-        use exec   "echo Hello, Elitebuild from syscall! (linux-based)"
+        use exec   "echo 'Hello, Elitebuild from syscall! (linux-based)'"
         use signal "exit"
     ]
 
