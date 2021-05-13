@@ -1,7 +1,12 @@
+set ProjectName as "Elitebuild"
+
 set COMPILER    as "gcc"
 set fn          as "for"
 set commandline as "argument"
 set echo        as "println"
+
+set Linux       as "linux"
+set FreeBSD     as "freebsd"
 
 \\set arguments as string (
 \\    "example.cpp",
@@ -15,7 +20,7 @@ set echo        as "println"
 \\ for signal "start"
 $fn signal "start" [
     \\ println "Hello, Elitebuild"
-    $echo "Hello, Elitebuild!"
+    $echo "Hello, {ProjectName}!"
 
     \\ for argument "hi"
     $fn $commandline "hi" [
@@ -28,11 +33,11 @@ $fn signal "start" [
     ]
 
     // Platform-specific functions.
-    for specific "linux"   [
+    for specific "{Linux}"   [
         println "Linux-based"
     ]
 
-    for specific "freebsd" [
+    for specific "{FreeBSD}" [
         println "FreeBSD"
     ]
 
@@ -52,10 +57,10 @@ $fn signal "start" [
     \\    ]
     \\]
 
-    for specific "linux" [
-        use exec   "echo 'Hello, Elitebuild from syscall! (linux-based)'"
+    for specific $Linux   [
+        use exec   "echo 'Hello, {ProjectName} from syscall! ({Linux}-based)'"
         use signal "exit"
     ]
 
-    for specific "freebsd" [ use exec  "uname --a" ]
+    for specific $FreeBSD [ use exec  "uname --a" ]
 ]

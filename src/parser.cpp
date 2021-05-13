@@ -127,6 +127,38 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                     continue;
                 }
 
+                if(tokenizer::is_data(__token)) {
+                    std::string __data, __format      ;
+                    bool        __is_formatter = false;
+
+                    for(auto& character : __token) {
+                        if(__is_formatter) {
+                            if(character == '}') {
+                                __is_formatter = false;
+                                __data.append(this->token_get(__format));
+
+                                __format.clear();
+
+                                continue;
+                            }
+
+                            __format.push_back(character);
+
+                            continue;
+                        }
+
+                        if(character == '{') {
+                            __is_formatter = true;
+
+                            continue;
+                        }
+
+                        __data.push_back(character);
+                    }
+
+                    __token = __data;
+                }
+
                 if(is_use) {
                     if(is_use_argument) {
                         auto __token__ = ast_helpers::extract_arg(__token);
