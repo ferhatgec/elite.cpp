@@ -157,7 +157,8 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                     if(is_data_initializer) {
                         is_variable = is_data_initializer = false;
 
-                        this->token_set(variable_name, __token);
+                        this->token_set(variable_name,
+                                        ast_helpers::extract_arg(__token));
 
                         variable_name.clear();
 
