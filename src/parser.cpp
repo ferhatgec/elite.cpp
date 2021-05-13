@@ -1,5 +1,6 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "UnreachableCode"
+
 // MIT License
 //
 // Copyright (c) 2021 Ferhat Geçdoğan All Rights Reserved.
@@ -11,13 +12,14 @@
 #include "../include/elite.hpp"
 #include "../include/parser.hpp"
 #include "../include/helpers.hpp"
+#include "../include/tokenizer.hpp"
 
 void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
     auto __matched_type          = EliteKeywords::Undefined       ;
     auto __last_matched_function = EliteASTForFunctions::Undefined;
 
     bool is_variable         = false,
-         is_data             = false,
+         is_defined          = false,
 
          is_for              = false,
          is_for_argument     = false,
@@ -41,6 +43,13 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
         if(token.empty()) { continue; }
 
         auto __token   = right_trim(left_trim(token));
+
+        if(is_defined) {
+            __token    = this->token_get(__token);
+
+            is_defined = false;
+        }
+        else if(tokenizer::is_variable(__token)) { is_defined = true; continue; }
 
         __matched_type = this->init_ast.match_types(__token);
 
@@ -327,6 +336,18 @@ void EliteParser::token_set(std::string variable, std::string data) noexcept {
                 variable,
                 data
             });
+}
+
+std::string EliteParser::token_get(std::string variable) noexcept {
+    for(auto& variable_list : this->data_tree.variable_list) {
+        if(variable == variable_list.__name) {
+            if(variable_list.__type != EliteKeywords::Undefined) {
+                return variable_list.__data;
+            }
+        }
+    }
+
+    return "";
 }
 
 bool EliteParser::is_same_arg(std::string& argument) noexcept {

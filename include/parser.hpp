@@ -36,7 +36,9 @@ public:
                                   std::string argument                  ) noexcept;
 
     void ast_parse_use           (std::string argument                  ) noexcept;
+
     void token_set               (std::string variable, std::string data) noexcept;
+    std::string token_get        (std::string variable                  ) noexcept;
 
     bool is_same_arg             (std::string& argument                 ) noexcept;
     bool is_same                 (std::string& target                   ) noexcept;

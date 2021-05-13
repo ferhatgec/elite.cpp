@@ -16,7 +16,9 @@ namespace tokenizer {
             "(",
             ")",
             "[",
-            "]"
+            "]",
+            "$",
+            ","
     };
 
     static inline bool is_data   (std::string token) noexcept {
@@ -33,7 +35,11 @@ namespace tokenizer {
             right_trim(token).back() == '"') ? true : false;
     }
 
-    static inline bool is_comment(std::string token) noexcept {
+    static inline bool is_variable(std::string token) noexcept {
+        return (left_trim(token).front() == '$') ? true : false;
+    }
+
+    static inline bool is_comment (std::string token) noexcept {
         if(token.length() < 2) { return false; }
 
         return (left_trim(token).front() == '\\'

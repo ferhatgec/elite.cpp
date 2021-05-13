@@ -1,4 +1,7 @@
-set COMPILER as "gcc"
+set COMPILER    as "gcc"
+set fn          as "for"
+set commandline as "argument"
+set echo        as "println"
 
 \\set arguments as string (
 \\    "example.cpp",
@@ -9,11 +12,14 @@ set COMPILER as "gcc"
 \\    f("curl")
 \\)
 
-for signal "start" [
-    println "Hello,
-    Elitebuild!"
+\\ for signal "start"
+$fn signal "start" [
+    \\ println "Hello, Elitebuild"
+    $echo "Hello, Elitebuild!"
 
-    for argument "hi" [
+    \\ for argument "hi"
+    $fn $commandline "hi" [
+        \\ $echo "Hi!"
         println "Hi!"
     ]
 
