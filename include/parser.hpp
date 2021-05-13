@@ -22,9 +22,11 @@ public:
 
     ~EliteParser()= default;
 
-    void parse_tokens (std::vector<std::string> tokens       ) noexcept;
-    void ast_parse_use(std::string argument                  ) noexcept;
-    void token_set    (std::string variable, std::string data) noexcept;
+    void parse_tokens          (std::vector<std::string> tokens       ) noexcept;
+    void ast_parse_use_function(std::string function,
+                                std::string argument                  ) noexcept;
+    void ast_parse_use         (std::string argument                  ) noexcept;
+    void token_set             (std::string variable, std::string data) noexcept;
 };
 
 #endif // ELITE_CPP_PARSER_HPP

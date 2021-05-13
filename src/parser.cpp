@@ -81,7 +81,7 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
             default: {
                 if(is_use) {
                     if(is_use_argument) {
-                        auto __token__ = this->init_ast.extract_arg(__token);
+                        auto __token__ = ast_helpers::extract_arg(__token);
 
                         for(auto& argument : this->init_ast.ast_for_use_argument) {
                             if(argument == __token__) {
@@ -89,12 +89,20 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                             }
                         }
 
+
+                        if(__token__.empty()) { continue; }
+
+                        this->ast_parse_use_function(variable_data, __token);
+
+                        is_use = is_use_argument = false;
+
                         continue;
                     }
 
                     for(auto& function : this->init_ast.ast_for_use) {
                         if(function == __token) {
                             is_use_argument = true;
+                            variable_data   = function;
 
                             continue;
                         }
@@ -103,7 +111,7 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
 
                 if(is_print) {
                     std::cout <<
-                        this->init_ast.extract_arg(__token);
+                        ast_helpers::extract_arg(__token);
 
                     is_print = false;
 
@@ -112,7 +120,7 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
 
                 if(is_for) {
                     if(is_for_argument) {
-                        auto __token__ = this->init_ast.extract_arg(__token);
+                        auto __token__ = ast_helpers::extract_arg(__token);
 
                         for(auto& argument : this->init_ast.ast_for_functions_arguments) {
                             if(argument == __token__) {
@@ -152,6 +160,24 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                     continue;
                 }
             }
+        }
+    }
+}
+
+void EliteParser::ast_parse_use_function(std::string function, std::string argument) noexcept {
+    switch(this->init_ast.match_use_functions(function)) {
+        case EliteASTUseFunctions::Signal: {
+            this->ast_parse_use(argument);
+        }
+
+        case EliteASTUseFunctions::Exec  : {
+            if(std::system(ast_helpers::extract_arg(argument).c_str())) {
+                // Execution error
+            }
+        }
+
+        default: {
+            // Syntax error (Undefined function)
         }
     }
 }

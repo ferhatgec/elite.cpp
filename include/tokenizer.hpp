@@ -87,6 +87,8 @@ namespace tokenizer {
         auto temporary_tokens  = split_ws(raw_data.raw_data);
         std::vector<std::string> tokenized_data;
 
+        std::string variable_data;
+
         bool found_data = false;
 
         for(std::size_t i = 0; i < temporary_tokens.size(); i++) {
@@ -101,6 +103,8 @@ namespace tokenizer {
             auto x        = split_ws(tokenize);
 
             for(auto& operators : x) {
+                variable_data.append    (operators);
+
                 tokenized_data.push_back(operators);
             }
         }

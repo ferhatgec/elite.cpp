@@ -28,6 +28,12 @@ enum class EliteKeywords {
     Undefined
 };
 
+enum class EliteASTUseFunctions {
+    Signal,
+    Exec,
+    Undefined
+};
+
 enum class EliteASTUseArguments {
     Exit,
     Undefined
@@ -53,8 +59,10 @@ public:
     std::vector<std::string> ast_for_functions_arguments;
     std::vector<std::string> ast_for_use_argument       ;
 
-    std::unordered_map<std::string, EliteKeywords       > syntax_list ;
-    std::unordered_map<std::string, EliteASTUseArguments> ast_use_list;
+    std::unordered_map<std::string, EliteKeywords       > syntax_list;
+
+    std::unordered_map<std::string, EliteASTUseFunctions> ast_use_functions;
+    std::unordered_map<std::string, EliteASTUseArguments> ast_use_list     ;
 public:
     EliteAST() = default;
     ~EliteAST()= default;
@@ -62,13 +70,14 @@ public:
     void          init_keywords()                                   noexcept;
     void          add_token    (std::string token,
                                 EliteKeywords token_type)           noexcept;
+    void          add_use_function(std::string function,
+                                   EliteASTUseFunctions token_type) noexcept;
     void          add_use_argument(std::string argument,
                                    EliteASTUseArguments token_type) noexcept;
 
     EliteKeywords match_types  (std::string& token)                 noexcept;
+    EliteASTUseFunctions match_use_functions(std::string function)  noexcept;
     EliteASTUseArguments match_use_arguments(std::string argument)  noexcept;
-
-    std::string   extract_arg  (std::string argument)               noexcept;
 };
 
 class EliteDataInfos {
@@ -83,5 +92,16 @@ class EliteDataTree {
 public:
     std::vector<EliteDataInfos> variable_list;
 };
+
+namespace ast_helpers {
+    static inline std::string extract_arg(std::string argument) noexcept {
+        if(argument.front() == '"' && argument.back() == '"' && argument.length() >= 2) {
+            argument.erase(argument.end() - 1);
+            argument.erase(argument.begin()          );
+
+            return argument;
+        } return "";
+    }
+}
 
 #endif // ELITE_CPP_AST_HPP
