@@ -17,6 +17,7 @@ enum class EliteKeywords {
     As,
     For,
     Print,
+    Use,
 
     LeftParenthese,
     RightParenthese,
@@ -27,12 +28,18 @@ enum class EliteKeywords {
     Undefined
 };
 
+enum class EliteASTUseArguments {
+    Exit,
+    Undefined
+};
+
 class EliteAST {
 public:
     std::string ast_set  ;
     std::string ast_as   ;
     std::string ast_for  ;
     std::string ast_print;
+    std::string ast_use  ;
 
     std::string ast_left_parenthese;
     std::string ast_right_parenthese;
@@ -41,20 +48,27 @@ public:
     std::string ast_square_right_bracket;
 
     std::vector<std::string> ast_for_functions          ;
-    std::vector<std::string> ast_for_functions_arguments;
+    std::vector<std::string> ast_for_use                ;
 
-    std::unordered_map<std::string, EliteKeywords> syntax_list;
+    std::vector<std::string> ast_for_functions_arguments;
+    std::vector<std::string> ast_for_use_argument       ;
+
+    std::unordered_map<std::string, EliteKeywords       > syntax_list ;
+    std::unordered_map<std::string, EliteASTUseArguments> ast_use_list;
 public:
     EliteAST() = default;
     ~EliteAST()= default;
 
-    void          init_keywords()                         noexcept;
+    void          init_keywords()                                   noexcept;
     void          add_token    (std::string token,
-                                EliteKeywords token_type) noexcept;
+                                EliteKeywords token_type)           noexcept;
+    void          add_use_argument(std::string argument,
+                                   EliteASTUseArguments token_type) noexcept;
 
-    EliteKeywords match_types  (std::string& token)       noexcept;
+    EliteKeywords match_types  (std::string& token)                 noexcept;
+    EliteASTUseArguments match_use_arguments(std::string argument)  noexcept;
 
-    std::string   extract_arg  (std::string argument)     noexcept;
+    std::string   extract_arg  (std::string argument)               noexcept;
 };
 
 class EliteDataInfos {

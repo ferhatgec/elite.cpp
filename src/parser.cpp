@@ -21,6 +21,9 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
 
          is_print            = false,
 
+         is_use              = false,
+         is_use_argument     = false,
+
          is_data_initializer = false;
 
     std::string variable_name, variable_data;
@@ -64,12 +67,40 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                 continue;
             }
 
+            case EliteKeywords::Use  : {
+                is_use = true;
+
+                continue;
+            }
+
             case EliteKeywords::LeftParenthese :
             case EliteKeywords::RightParenthese:
             case EliteKeywords::LeftSqBracket  :
             case EliteKeywords::RightSqBracket : {}
 
             default: {
+                if(is_use) {
+                    if(is_use_argument) {
+                        auto __token__ = this->init_ast.extract_arg(__token);
+
+                        for(auto& argument : this->init_ast.ast_for_use_argument) {
+                            if(argument == __token__) {
+                                this->ast_parse_use(__token__);
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    for(auto& function : this->init_ast.ast_for_use) {
+                        if(function == __token) {
+                            is_use_argument = true;
+
+                            continue;
+                        }
+                    }
+                }
+
                 if(is_print) {
                     std::cout <<
                         this->init_ast.extract_arg(__token);
@@ -121,6 +152,18 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                     continue;
                 }
             }
+        }
+    }
+}
+
+void EliteParser::ast_parse_use(std::string argument) noexcept {
+    switch(this->init_ast.match_use_arguments(argument)) {
+        case EliteASTUseArguments::Exit: {
+            std::exit(1);
+        }
+
+        default: {
+            // Syntax error (undefined argument)
         }
     }
 }

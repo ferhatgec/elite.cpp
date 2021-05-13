@@ -13,6 +13,7 @@ void EliteAST::init_keywords() noexcept  {
     this->ast_as   = "as"   ;
     this->ast_for  = "for"  ;
     this->ast_print= "print";
+    this->ast_use  = "use"  ;
 
     this->ast_left_parenthese = "(";
     this->ast_right_parenthese= ")";
@@ -28,20 +29,33 @@ void EliteAST::init_keywords() noexcept  {
         "start"
     };
 
+    this->ast_for_use = this->ast_for_functions;
+
+    this->ast_for_use_argument = std::vector<std::string> {
+        "exit"
+    };
+
     this->add_token(this->ast_set  , EliteKeywords::Set  );
     this->add_token(this->ast_as   , EliteKeywords::As   );
     this->add_token(this->ast_for  , EliteKeywords::For  );
     this->add_token(this->ast_print, EliteKeywords::Print);
+    this->add_token(this->ast_use  , EliteKeywords::Use  );
 
     this->add_token(this->ast_left_parenthese , EliteKeywords::LeftParenthese );
     this->add_token(this->ast_right_parenthese, EliteKeywords::RightParenthese);
 
     this->add_token(this->ast_square_left_bracket , EliteKeywords::LeftSqBracket );
     this->add_token(this->ast_square_right_bracket, EliteKeywords::RightSqBracket);
+
+    this->add_use_argument("exit", EliteASTUseArguments::Exit);
 }
 
 void EliteAST::add_token(std::string token, EliteKeywords token_type) noexcept {
     this->syntax_list.insert(std::make_pair(token, token_type));
+}
+
+void EliteAST::add_use_argument(std::string argument, EliteASTUseArguments token_type) noexcept {
+    this->ast_use_list.insert(std::make_pair(argument, token_type));
 }
 
 EliteKeywords EliteAST::match_types(std::string& token) noexcept {
@@ -52,6 +66,16 @@ EliteKeywords EliteAST::match_types(std::string& token) noexcept {
     }
 
     return EliteKeywords::Undefined;
+}
+
+EliteASTUseArguments EliteAST::match_use_arguments(std::string argument) noexcept {
+    auto argument_type = this->ast_use_list.find(argument);
+
+    if(argument_type != this->ast_use_list.end()) {
+        return argument_type->second;
+    }
+
+    return EliteASTUseArguments::Undefined;
 }
 
 std::string EliteAST::extract_arg(std::string argument) noexcept {
