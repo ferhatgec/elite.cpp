@@ -9,11 +9,12 @@
 #include "../include/ast.hpp"
 
 void EliteAST::init_keywords() noexcept  {
-    this->ast_set  = "set"  ;
-    this->ast_as   = "as"   ;
-    this->ast_for  = "for"  ;
-    this->ast_print= "print";
-    this->ast_use  = "use"  ;
+    this->ast_set    = "set"                 ;
+    this->ast_as     = "as"                  ;
+    this->ast_for    = "for"                 ;
+    this->ast_print  = "print"               ;
+    this->ast_println= this->ast_print + "ln";
+    this->ast_use    = "use"                 ;
 
     this->ast_left_parenthese = "(";
     this->ast_right_parenthese= ")";
@@ -38,11 +39,12 @@ void EliteAST::init_keywords() noexcept  {
         "exit"
     };
 
-    this->add_token(this->ast_set  , EliteKeywords::Set  );
-    this->add_token(this->ast_as   , EliteKeywords::As   );
-    this->add_token(this->ast_for  , EliteKeywords::For  );
-    this->add_token(this->ast_print, EliteKeywords::Print);
-    this->add_token(this->ast_use  , EliteKeywords::Use  );
+    this->add_token(this->ast_set         , EliteKeywords::Set    );
+    this->add_token(this->ast_as          , EliteKeywords::As     );
+    this->add_token(this->ast_for         , EliteKeywords::For    );
+    this->add_token(this->ast_print       , EliteKeywords::Print  );
+    this->add_token(this->ast_println     , EliteKeywords::Println);
+    this->add_token(this->ast_use         , EliteKeywords::Use    );
 
     this->add_token(this->ast_left_parenthese , EliteKeywords::LeftParenthese );
     this->add_token(this->ast_right_parenthese, EliteKeywords::RightParenthese);

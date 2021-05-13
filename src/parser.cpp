@@ -20,6 +20,7 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
          is_for_argument     = false,
 
          is_print            = false,
+         is_newline          = false,
 
          is_use              = false,
          is_use_argument     = false,
@@ -37,13 +38,13 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
         __matched_type = this->init_ast.match_types(__token);
 
         switch(__matched_type) {
-            case EliteKeywords::Set  : {
+            case EliteKeywords::Set    : {
                 is_variable = true;
 
                 continue;
             }
 
-            case EliteKeywords::As   : {
+            case EliteKeywords::As     : {
                 if(is_variable) {
                     is_data_initializer = true;
 
@@ -55,19 +56,25 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                 continue;
             }
 
-            case EliteKeywords::For  : {
+            case EliteKeywords::For    : {
                 is_for = true;
 
                 continue;
             }
 
-            case EliteKeywords::Print: {
+            case EliteKeywords::Print  : {
                 is_print = true;
 
                 continue;
             }
 
-            case EliteKeywords::Use  : {
+            case EliteKeywords::Println: {
+                is_print = is_newline = true;
+
+                continue;
+            }
+
+            case EliteKeywords::Use    : {
                 is_use = true;
 
                 continue;
@@ -112,6 +119,8 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                 if(is_print) {
                     std::cout <<
                         ast_helpers::extract_arg(__token);
+
+                    if(is_newline) { std::cout << '\n'; }
 
                     is_print = false;
 

@@ -17,6 +17,7 @@ enum class EliteKeywords {
     As,
     For,
     Print,
+    Println,
     Use,
 
     LeftParenthese,
@@ -41,11 +42,12 @@ enum class EliteASTUseArguments {
 
 class EliteAST {
 public:
-    std::string ast_set  ;
-    std::string ast_as   ;
-    std::string ast_for  ;
-    std::string ast_print;
-    std::string ast_use  ;
+    std::string ast_set    ;
+    std::string ast_as     ;
+    std::string ast_for    ;
+    std::string ast_print  ;
+    std::string ast_println;
+    std::string ast_use    ;
 
     std::string ast_left_parenthese;
     std::string ast_right_parenthese;
