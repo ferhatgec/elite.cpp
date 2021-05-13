@@ -22,10 +22,6 @@ void EliteAST::init_keywords() noexcept  {
     this->ast_square_left_bracket = "[";
     this->ast_square_right_bracket= "]";
 
-    this->ast_for_functions = std::vector<std::string> {
-        "signal"
-    };
-
     this->ast_for_functions_arguments = std::vector<std::string> {
         "start"
     };
@@ -52,6 +48,19 @@ void EliteAST::init_keywords() noexcept  {
     this->add_token(this->ast_square_left_bracket , EliteKeywords::LeftSqBracket );
     this->add_token(this->ast_square_right_bracket, EliteKeywords::RightSqBracket);
 
+    this->add_for_function("signal"  , EliteASTForFunctions::Signal  );
+    this->add_for_function("specific", EliteASTForFunctions::Specific);
+
+    this->add_for_specific_target("windows"  , EliteASTForSpecificTargets::Windows  );
+    this->add_for_specific_target("macos"    , EliteASTForSpecificTargets::macOS    );
+    this->add_for_specific_target("ios"      , EliteASTForSpecificTargets::iOS      );
+    this->add_for_specific_target("linux"    , EliteASTForSpecificTargets::Linux    );
+    this->add_for_specific_target("android"  , EliteASTForSpecificTargets::Android  );
+    this->add_for_specific_target("freebsd"  , EliteASTForSpecificTargets::FreeBSD  );
+    this->add_for_specific_target("dragonfly", EliteASTForSpecificTargets::DragonFly);
+    this->add_for_specific_target("openbsd"  , EliteASTForSpecificTargets::OpenBSD  );
+    this->add_for_specific_target("netbsd"   , EliteASTForSpecificTargets::NetBSD   );
+
     this->add_use_function("signal", EliteASTUseFunctions::Signal);
     this->add_use_function("exec"  , EliteASTUseFunctions::Exec  );
 
@@ -60,6 +69,14 @@ void EliteAST::init_keywords() noexcept  {
 
 void EliteAST::add_token(std::string token, EliteKeywords token_type) noexcept {
     this->syntax_list.insert(std::make_pair(token, token_type));
+}
+
+void EliteAST::add_for_function(std::string function, EliteASTForFunctions token_type) noexcept {
+    this->ast_for_functions.insert(std::make_pair(function, token_type));
+}
+
+void EliteAST::add_for_specific_target(std::string function, EliteASTForSpecificTargets token_type) noexcept {
+    this->ast_for_specific_targets.insert(std::make_pair(function, token_type));
 }
 
 void EliteAST::add_use_function(std::string function, EliteASTUseFunctions token_type) noexcept {
@@ -78,6 +95,26 @@ EliteKeywords EliteAST::match_types(std::string& token) noexcept {
     }
 
     return EliteKeywords::Undefined;
+}
+
+EliteASTForFunctions EliteAST::match_for_functions(std::string function) noexcept {
+    auto function_type = this->ast_for_functions.find(function);
+
+    if(function_type != this->ast_for_functions.end()) {
+        return function_type->second;
+    }
+
+    return EliteASTForFunctions::Undefined;
+}
+
+EliteASTForSpecificTargets EliteAST::match_for_specific_targets(std::string target) noexcept {
+    auto target_type = this->ast_for_specific_targets.find(target);
+
+    if(target_type != this->ast_for_specific_targets.end()) {
+        return target_type->second;
+    }
+
+    return EliteASTForSpecificTargets::Undefined;
 }
 
 EliteASTUseFunctions EliteAST::match_use_functions(std::string function) noexcept {

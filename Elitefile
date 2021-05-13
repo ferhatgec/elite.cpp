@@ -13,6 +13,15 @@ for signal "start" [
     println "Hello,
     Elitebuild!"
 
+    // Platform-specific functions.
+    for specific "linux"   [
+        println "Linux-based"
+    ]
+
+    for specific "freebsd" [
+        println "FreeBSD"
+    ]
+
     \\for argument("make") [
     \\    for specific("linux") [
     \\        use commandline(
@@ -20,7 +29,6 @@ for signal "start" [
     \\            $arguments,
     \\            $flags
     \\        )
-
     \\        print "hello, world"
     \\
     \\        use commandline(
@@ -30,9 +38,10 @@ for signal "start" [
     \\    ]
     \\]
 
-    use exec  "echo Hello, Elitebuild from syscall!"
+    for specific "linux" [
+        use exec   "echo Hello, Elitebuild from syscall! (linux-based)"
+        use signal "exit"
+    ]
 
-    use exec  "uname --a"
-
-    use signal "exit"
+    for specific "freebsd" [ use exec  "uname --a" ]
 ]
