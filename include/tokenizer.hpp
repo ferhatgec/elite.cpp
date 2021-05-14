@@ -42,8 +42,15 @@ namespace tokenizer {
     static inline bool is_comment (std::string token) noexcept {
         if(token.length() < 2) { return false; }
 
-        return (left_trim(token).front() == '\\'
-                || right_trim(token).back() == '\\') ? true : false;
+        token = left_trim(right_trim(token));
+
+        if(token.front() == '\\'
+                && token[1] == '\\') { return true; }
+
+        if(token.front() == '/'
+            && token[1] == '/') {
+            std::cout << "do not use '//' as comment, ignored.\n";
+        } return false;
     }
 
     static inline std::string replace_with(std::string token,
