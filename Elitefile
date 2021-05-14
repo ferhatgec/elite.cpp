@@ -22,6 +22,16 @@ $fn signal "start" [
     \\ println "Hello, Elitebuild"
     $echo "Hello, {ProjectName}!"
 
+    println "Default compiler is: {COMPILER}"
+
+    set echo as "print"
+    $echo "Huh!"
+
+    set echo as "println"
+
+    \\ Prints newline
+    $echo
+
     \\ for argument "hi"
     $fn $commandline "hi" [
         \\ $echo "Hi!"

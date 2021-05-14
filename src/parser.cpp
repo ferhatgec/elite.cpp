@@ -122,7 +122,10 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
 
             default: {
                 if(!is_main_os) {
-                    is_print = is_newline = false;
+                    is_print        =
+                    is_newline      =
+                    is_use          =
+                    is_use_argument = false;
 
                     continue;
                 }
@@ -196,7 +199,7 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
 
                     if(is_newline) { std::cout << '\n'; }
 
-                    is_print = false;
+                    is_print = is_newline = false;
 
                     continue;
                 }
@@ -362,6 +365,14 @@ void EliteParser::ast_parse_use(std::string argument) noexcept {
 }
 
 void EliteParser::token_set(std::string variable, std::string data) noexcept {
+    for(std::size_t i = 0; i < this->data_tree.variable_list.size(); i++) {
+        if(this->data_tree.variable_list[i].__name == variable) {
+            this->data_tree.variable_list[i].__data = data;
+
+            return;
+        }
+    }
+
     this->data_tree.variable_list.push_back(
             EliteDataInfos {
                 EliteKeywords::Set,
