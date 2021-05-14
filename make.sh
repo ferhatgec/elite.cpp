@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-clang++ src/*.cpp -o elite
+clang++ -std=c++17 -lstdc++fs src/*.cpp -o elite

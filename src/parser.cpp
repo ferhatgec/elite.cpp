@@ -8,6 +8,8 @@
 //
 //
 
+#include <filesystem>
+
 #include "../include/ast.hpp"
 #include "../include/elite.hpp"
 #include "../include/parser.hpp"
@@ -208,9 +210,12 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                     if(is_for_argument) {
                         auto __token__ = ast_helpers::extract_arg(__token);
 
+                        if(__token__.empty()) { __token__ = __token; }
+
                         switch(__last_matched_function) {
                             case EliteASTForFunctions::Specific:
-                            case EliteASTForFunctions::Argument: {
+                            case EliteASTForFunctions::Argument:
+                            case EliteASTForFunctions::Exists  : {
                                 is_main_os = this->ast_parse_for_functions(variable_name,
                                                                            __token__);
                             }
@@ -274,6 +279,10 @@ bool EliteParser::ast_parse_for_functions(std::string function, std::string argu
 
         case EliteASTForFunctions::Argument: {
             return this->is_same_arg(argument);
+        }
+
+        case EliteASTForFunctions::Exists  : {
+            return this->is_exists(argument);
         }
 
         default: {
@@ -391,6 +400,10 @@ std::string EliteParser::token_get(std::string variable) noexcept {
     }
 
     return "";
+}
+
+bool EliteParser::is_exists(std::string& path) noexcept {
+    return (std::filesystem::exists(path)) ? true : false;
 }
 
 bool EliteParser::is_same_arg(std::string& argument) noexcept {

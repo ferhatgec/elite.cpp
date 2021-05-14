@@ -40,6 +40,7 @@ public:
     void token_set               (std::string variable, std::string data) noexcept;
     std::string token_get        (std::string variable                  ) noexcept;
 
+    bool is_exists               (std::string& path                     ) noexcept;
     bool is_same_arg             (std::string& argument                 ) noexcept;
     bool is_same                 (std::string& target                   ) noexcept;
     std::string to_os_keyword    (                                      ) noexcept;

@@ -33,6 +33,7 @@ enum class EliteASTForFunctions {
     Signal,
     Specific,
     Argument,
+    Exists,
 
     Undefined
 };

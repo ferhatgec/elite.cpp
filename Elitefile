@@ -1,6 +1,10 @@
 set ProjectName as "Elitebuild"
 
+set BIN_PATH    as "/usr/bin/"
 set COMPILER    as "gcc"
+
+set PATH        as "{BIN_PATH}{COMPILER}"
+
 set fn          as "for"
 set commandline as "argument"
 set echo        as "println"
@@ -44,6 +48,10 @@ $fn signal "start" [
 
     // Platform-specific functions.
     for specific "{Linux}"   [
+        for exists $PATH [
+            println "Compiler path found: {PATH}"
+        ]
+
         println "Linux-based"
     ]
 
