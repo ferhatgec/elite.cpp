@@ -195,7 +195,8 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                         }
 
                         switch(__last_matched_if_function) {
-                            case EliteASTIfFunctions::Eq: {
+                            case EliteASTIfFunctions::UnEq:
+                            case EliteASTIfFunctions::Eq  : {
                                 is_main_os = this->ast_parse_if_function(variable_name,
                                                                          first_if_arg,
                                                                          second_if_arg);
@@ -405,8 +406,12 @@ bool EliteParser::ast_parse_for_specific_target(std::string target) noexcept {
 
 bool EliteParser::ast_parse_if_function(std::string function, std::string argument_1, std::string argument_2) noexcept {
     switch(this->init_ast.match_if_functions(function)) {
-        case EliteASTIfFunctions::Eq: {
+        case EliteASTIfFunctions::Eq  : {
             return this->is_same_argument(argument_1, argument_2);
+        }
+
+        case EliteASTIfFunctions::UnEq: {
+            return this->is_not_same_argument(argument_1, argument_2);
         }
 
         case EliteASTIfFunctions::Undefined: {
@@ -489,6 +494,10 @@ bool EliteParser::is_same(std::string& target) noexcept {
 
 bool EliteParser::is_same_argument(std::string& argument_1, std::string& argument_2) noexcept {
     return (argument_1 == argument_2) ? true : false;
+}
+
+bool EliteParser::is_not_same_argument(std::string& argument_1, std::string& argument_2) noexcept {
+    return (argument_1 != argument_2) ? true : false;
 }
 
 std::string EliteParser::to_os_keyword() noexcept {

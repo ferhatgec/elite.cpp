@@ -66,6 +66,7 @@ void EliteAST::init_keywords() noexcept  {
     this->add_for_specific_target("netbsd"   , EliteASTForSpecificTargets::NetBSD   );
 
     this->add_if_function ("eq"   , EliteASTIfFunctions::Eq     );
+    this->add_if_function ("uneq" , EliteASTIfFunctions::UnEq   );
 
     this->add_use_function("signal", EliteASTUseFunctions::Signal);
     this->add_use_function("exec"  , EliteASTUseFunctions::Exec  );

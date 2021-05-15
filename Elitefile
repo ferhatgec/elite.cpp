@@ -29,6 +29,10 @@ $fn signal "start" [
         $echo "Hello, {ProjectName}!"
     ]
 
+    if uneq "{COMPILER}" "gcc" [
+        println "Your compiler seemsly not GCC, unoptimized."
+    ]
+
     println "Default compiler is: {COMPILER}"
 
     set echo as "print"

@@ -32,6 +32,7 @@ enum class EliteKeywords {
 
 enum class EliteASTIfFunctions {
     Eq,
+    UnEq,
 
     Undefined
 };

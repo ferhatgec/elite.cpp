@@ -49,6 +49,8 @@ public:
     bool is_same                 (std::string& target                   ) noexcept;
     bool is_same_argument        (std::string& argument_1,
                                   std::string& argument_2               ) noexcept;
+    bool is_not_same_argument    (std::string& argument_1,
+                                  std::string& argument_2               ) noexcept;
     std::string to_os_keyword    (                                      ) noexcept;
 };
 
