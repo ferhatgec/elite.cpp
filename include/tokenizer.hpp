@@ -10,6 +10,7 @@
 
 #include "elite.hpp"
 #include "helpers.hpp"
+#include "ast.hpp"
 
 namespace tokenizer {
     static std::vector<std::string> TOKEN_LIST = {
@@ -39,7 +40,11 @@ namespace tokenizer {
         return (left_trim(token).front() == '$') ? true : false;
     }
 
-    static inline bool is_comment (std::string token) noexcept {
+    static inline bool is_env_token(std::string& token) noexcept {
+        return (token == "env") ? true : false;
+    }
+
+    static inline bool is_comment(std::string token) noexcept {
         if(token.length() < 2) { return false; }
 
         token = left_trim(right_trim(token));
@@ -51,6 +56,10 @@ namespace tokenizer {
             && token[1] == '/') {
             std::cout << "do not use '//' as comment, ignored.\n";
         } return false;
+    }
+
+    static inline std::string get_environment(std::string data) noexcept {
+        return std::getenv(data.c_str());
     }
 
     static inline std::string replace_with(std::string token,
@@ -102,9 +111,28 @@ namespace tokenizer {
 
         std::string variable_data;
 
-        bool found_data = false;
+        bool found_data = false,
+             is_env     = false;
 
         for(std::size_t i = 0; i < temporary_tokens.size(); i++) {
+            if(is_env) {
+                std::string __environment = tokenizer::get_environment(
+                        ast_helpers::extract_arg(temporary_tokens[i]));
+
+                // TODO: Replace '_' instead of whitespace
+                // Environments must be string that has not any whitespaces (use _ instead)
+
+                if(!__environment.empty()) {
+                    tokenized_data.push_back("\"" + __environment + "\"");
+                }
+
+                is_env = false; continue;
+            }
+
+            if(is_env_token(temporary_tokens[i])) {
+                is_env = true; continue;
+            }
+
             if(is_data(temporary_tokens[i])) {
                 tokenized_data
                     .push_back(get_data(temporary_tokens, i));

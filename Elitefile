@@ -12,6 +12,9 @@ set echo        as "println"
 set Linux       as "linux"
 set FreeBSD     as "freebsd"
 
+set HOME_PATH   as env "HOME"
+set USERNAME    as env "USER"
+
 \\set arguments as string (
 \\    "example.cpp",
 \\    "main.cpp"
@@ -23,6 +26,8 @@ set FreeBSD     as "freebsd"
 
 \\ for signal "start"
 $fn signal "start" [
+    println "HOME_PATH: {HOME_PATH} | USERNAME : {USERNAME}"
+
     \\ You can also use $ProjectName instead of formatter
     if eq "{ProjectName}" "Elitebuild" [
         \\ println "Hello, Elitebuild"
