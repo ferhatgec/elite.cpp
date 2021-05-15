@@ -32,6 +32,10 @@ public:
     bool
     ast_parse_for_specific_target(std::string target                    ) noexcept;
 
+    bool ast_parse_if_function   (std::string function,
+                                  std::string argument_1,
+                                  std::string argument_2                ) noexcept;
+
     void ast_parse_use_function  (std::string function,
                                   std::string argument                  ) noexcept;
 
@@ -43,6 +47,8 @@ public:
     bool is_exists               (std::string& path                     ) noexcept;
     bool is_same_arg             (std::string& argument                 ) noexcept;
     bool is_same                 (std::string& target                   ) noexcept;
+    bool is_same_argument        (std::string& argument_1,
+                                  std::string& argument_2               ) noexcept;
     std::string to_os_keyword    (                                      ) noexcept;
 };
 

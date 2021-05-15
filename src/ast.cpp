@@ -15,6 +15,7 @@ void EliteAST::init_keywords() noexcept  {
     this->ast_print  = "print"               ;
     this->ast_println= this->ast_print + "ln";
     this->ast_use    = "use"                 ;
+    this->ast_if     = "if"                  ;
 
     this->ast_left_parenthese = "(";
     this->ast_right_parenthese= ")";
@@ -41,6 +42,7 @@ void EliteAST::init_keywords() noexcept  {
     this->add_token(this->ast_print       , EliteKeywords::Print  );
     this->add_token(this->ast_println     , EliteKeywords::Println);
     this->add_token(this->ast_use         , EliteKeywords::Use    );
+    this->add_token(this->ast_if          , EliteKeywords::If     );
 
     this->add_token(this->ast_left_parenthese , EliteKeywords::LeftParenthese );
     this->add_token(this->ast_right_parenthese, EliteKeywords::RightParenthese);
@@ -63,6 +65,8 @@ void EliteAST::init_keywords() noexcept  {
     this->add_for_specific_target("openbsd"  , EliteASTForSpecificTargets::OpenBSD  );
     this->add_for_specific_target("netbsd"   , EliteASTForSpecificTargets::NetBSD   );
 
+    this->add_if_function ("eq"   , EliteASTIfFunctions::Eq     );
+
     this->add_use_function("signal", EliteASTUseFunctions::Signal);
     this->add_use_function("exec"  , EliteASTUseFunctions::Exec  );
 
@@ -81,6 +85,10 @@ void EliteAST::add_for_specific_target(std::string function, EliteASTForSpecific
     this->ast_for_specific_targets.insert(std::make_pair(function, token_type));
 }
 
+void EliteAST::add_if_function(std::string statement, EliteASTIfFunctions token_type) noexcept {
+    this->ast_if_functions.insert(std::make_pair(statement, token_type));
+}
+
 void EliteAST::add_use_function(std::string function, EliteASTUseFunctions token_type) noexcept {
     this->ast_use_functions.insert(std::make_pair(function, token_type));
 }
@@ -94,9 +102,7 @@ EliteKeywords EliteAST::match_types(std::string& token) noexcept {
 
     if(token_type != this->syntax_list.end()) {
         return token_type->second;
-    }
-
-    return EliteKeywords::Undefined;
+    } return EliteKeywords::Undefined;
 }
 
 EliteASTForFunctions EliteAST::match_for_functions(std::string function) noexcept {
@@ -104,9 +110,7 @@ EliteASTForFunctions EliteAST::match_for_functions(std::string function) noexcep
 
     if(function_type != this->ast_for_functions.end()) {
         return function_type->second;
-    }
-
-    return EliteASTForFunctions::Undefined;
+    } return EliteASTForFunctions::Undefined;
 }
 
 EliteASTForSpecificTargets EliteAST::match_for_specific_targets(std::string target) noexcept {
@@ -114,9 +118,15 @@ EliteASTForSpecificTargets EliteAST::match_for_specific_targets(std::string targ
 
     if(target_type != this->ast_for_specific_targets.end()) {
         return target_type->second;
-    }
+    } return EliteASTForSpecificTargets::Undefined;
+}
 
-    return EliteASTForSpecificTargets::Undefined;
+EliteASTIfFunctions EliteAST::match_if_functions(std::string statement) noexcept {
+    auto statement_type = this->ast_if_functions.find(statement);
+
+    if(statement_type != this->ast_if_functions.end()) {
+        return statement_type->second;
+    } return EliteASTIfFunctions::Undefined;
 }
 
 EliteASTUseFunctions EliteAST::match_use_functions(std::string function) noexcept {
@@ -124,9 +134,7 @@ EliteASTUseFunctions EliteAST::match_use_functions(std::string function) noexcep
 
     if(function_type != this->ast_use_functions.end()) {
         return function_type->second;
-    }
-
-    return EliteASTUseFunctions::Undefined;
+    } return EliteASTUseFunctions::Undefined;
 }
 
 EliteASTUseArguments EliteAST::match_use_arguments(std::string argument) noexcept {
@@ -134,7 +142,5 @@ EliteASTUseArguments EliteAST::match_use_arguments(std::string argument) noexcep
 
     if(argument_type != this->ast_use_list.end()) {
         return argument_type->second;
-    }
-
-    return EliteASTUseArguments::Undefined;
+    } return EliteASTUseArguments::Undefined;
 }

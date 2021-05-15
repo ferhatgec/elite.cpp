@@ -17,14 +17,18 @@
 #include "../include/tokenizer.hpp"
 
 void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
-    auto __matched_type          = EliteKeywords::Undefined       ;
-    auto __last_matched_function = EliteASTForFunctions::Undefined;
+    auto __matched_type            = EliteKeywords::Undefined       ;
+    auto __last_matched_function   = EliteASTForFunctions::Undefined;
+    auto __last_matched_if_function= EliteASTIfFunctions::Undefined ;
 
     bool is_variable         = false,
          is_defined          = false,
 
          is_for              = false,
          is_for_argument     = false,
+
+         is_if               = false,
+         is_if_function      = false,
 
          is_print            = false,
          is_newline          = false,
@@ -39,7 +43,11 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
 
     u32 count_end_of_function= 0;
 
-    std::string variable_name, variable_data;
+    std::string variable_name,
+                variable_data,
+
+                first_if_arg ,
+                second_if_arg;
 
     for(auto& token : tokens) {
         if(token.empty()) { continue; }
@@ -98,6 +106,12 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                 continue;
             }
 
+            case EliteKeywords::If     : {
+                is_if  = true;
+
+                continue;
+            }
+
             case EliteKeywords::LeftParenthese :
             case EliteKeywords::RightParenthese: {}
 
@@ -127,6 +141,8 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                     is_print        =
                     is_newline      =
                     is_use          =
+                    is_if           =
+                    is_if_function  =
                     is_use_argument = false;
 
                     continue;
@@ -162,6 +178,50 @@ void EliteParser::parse_tokens(std::vector <std::string> tokens) noexcept {
                     }
 
                     __token = __data;
+                }
+
+                if(is_if) {
+                    if(__token.empty()) { continue; }
+
+                    if(is_if_function) {
+                        if(first_if_arg.empty()) {
+                            first_if_arg = ast_helpers::extract_arg(__token);
+
+                            continue;
+                        }
+
+                        if(second_if_arg.empty()) {
+                            second_if_arg= ast_helpers::extract_arg(__token);
+                        }
+
+                        switch(__last_matched_if_function) {
+                            case EliteASTIfFunctions::Eq: {
+                                is_main_os = this->ast_parse_if_function(variable_name,
+                                                                         first_if_arg,
+                                                                         second_if_arg);
+                            }
+
+                            default: {
+                                // Syntax error
+                            }
+                        }
+
+                        is_if          =
+                        is_if_function = false;
+
+                        first_if_arg.clear(); second_if_arg.clear();
+
+                        continue;
+                    }
+
+                    if(this->init_ast.match_if_functions(__token) != EliteASTIfFunctions::Undefined) {
+                        is_if = is_if_function     = true;
+                        __last_matched_if_function = this->init_ast.match_if_functions(__token);
+
+                        variable_name              = __token;
+                    }
+
+                    continue;
                 }
 
                 if(is_use) {
@@ -343,6 +403,19 @@ bool EliteParser::ast_parse_for_specific_target(std::string target) noexcept {
     }
 }
 
+bool EliteParser::ast_parse_if_function(std::string function, std::string argument_1, std::string argument_2) noexcept {
+    switch(this->init_ast.match_if_functions(function)) {
+        case EliteASTIfFunctions::Eq: {
+            return this->is_same_argument(argument_1, argument_2);
+        }
+
+        case EliteASTIfFunctions::Undefined: {
+            // Syntax error (undefined function (eq, etc.)
+            return false;
+        }
+    }
+}
+
 void EliteParser::ast_parse_use_function(std::string function, std::string argument) noexcept {
     switch(this->init_ast.match_use_functions(function)) {
         case EliteASTUseFunctions::Signal: {
@@ -412,6 +485,10 @@ bool EliteParser::is_same_arg(std::string& argument) noexcept {
 
 bool EliteParser::is_same(std::string& target) noexcept {
     return (this->to_os_keyword() == target) ? true : false;
+}
+
+bool EliteParser::is_same_argument(std::string& argument_1, std::string& argument_2) noexcept {
+    return (argument_1 == argument_2) ? true : false;
 }
 
 std::string EliteParser::to_os_keyword() noexcept {

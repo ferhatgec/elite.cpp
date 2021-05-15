@@ -23,8 +23,11 @@ set FreeBSD     as "freebsd"
 
 \\ for signal "start"
 $fn signal "start" [
-    \\ println "Hello, Elitebuild"
-    $echo "Hello, {ProjectName}!"
+    \\ You can also use $ProjectName instead of formatter
+    if eq "{ProjectName}" "Elitebuild" [
+        \\ println "Hello, Elitebuild"
+        $echo "Hello, {ProjectName}!"
+    ]
 
     println "Default compiler is: {COMPILER}"
 
